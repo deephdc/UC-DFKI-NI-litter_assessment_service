@@ -1,0 +1,80 @@
+plot params:
+  colors PLD: ['0.65', '0.85', 'saddlebrown', 'aquamarine', 'peru', 'slategrey', 'green', 'blue']
+  colors PLQ: ['lightsteelblue', 
+          'lavender', 
+          'mediumpurple',
+          'deeppink',
+          'red',
+          'thistle',      # 5
+          'yellow',
+          'oldlace',
+          'violet',
+          'mediumorchid',
+          'darkviolet',   # 10
+          'slategrey',
+          'cyan',
+          'darkslategrey',
+          'gainsboro',
+          'silver',       # 15
+          'grey',
+          'dimgrey',
+          'peru',
+          'green',
+          'saddlebrown',  # 20
+          'blue',
+          'aquamarine',
+          'white']
+
+label:
+        label PLD: ['Litter - high', 'Litter - low', 'Organic debris', 'Other', 'Sand','Stones', 'Vegetation', 'Water']
+        label PLQ: ['P - bags LPDE thick',
+        'P - bags LPDE',
+        'P - bags robust PET',
+        'P - wrappers under 10cm',
+        'P - wrappers over 10cm', #5
+        'P - bottles PET',
+        'P - polystyrene under 20cm',
+        'P - polystyrene over 20cm',
+        'P - PPCP bottle',
+        'P - PPCP medical waste', #10
+        'P - PPCP other',
+        'P - fishing gear',
+        'P - cup lids, caps and small plastics',
+        'P - other plastics over 20cm',
+        'NP - rubber',            #15
+        'NP - metal',
+        'NP - glass',
+        'NP - other',
+        'NW - sand',
+        'NW - vegetation',        #20
+        'NW - wood',
+        'NW - water',
+        'NW - other']
+
+correction parameters: 
+        #class parameters for PLQ for size correction 
+        params_PLD: []
+        params_PLQ: [0.5, #'P - bags LPDE thick'
+        1.0, #'P - bags LPDE'
+        0.5, #'P - bags robust PET'
+        2.0, #'P - wrappers under 10cm'
+        1.0, #'P - wrappers over 10cm'
+        1.0, #'P - bottles PET'
+        1.0, #'P - polystyrene under 20cm'
+        0.3, #'P - polystyrene over 20cm'
+        2.0, #'P - PPCP bottle'
+        1.0, #'P - PPCP medical waste'
+        1.0, #'P - PPCP other'
+        0.5, #'P - fishing gear'
+        2.0, #'P - cup lids, caps and small plastics'
+        0.7, #'P - other plastics over 20cm'
+        0.5, #'NP - rubber'
+        1.0, #'NP - metal'
+        1.0, #'NP - glass'
+        1.0, #'NP - other'
+        0.0, #'NW - sand'
+        0.0, #'NW - vegetation'
+        0.0, #'NW - wood'
+        0.0, #'NW - water'
+        0.0, #'NW - other'
+        ]
