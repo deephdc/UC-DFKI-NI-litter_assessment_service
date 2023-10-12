@@ -5,12 +5,12 @@ Integration of DeepaaS API and litter assessment software
 
 To launch it, first install the package then run [deepaas](https://github.com/indigo-dc/DEEPaaS):
 ```bash
-git clone https://git.ni.dfki.de/cleluschko/litter_assessment_service
+git clone https://github.com/DFKI-NI/litter_assessment_service
 cd litter_assessment_service
 pip install -e .
 deepaas-run --listen-ip 0.0.0.0
 ```
-The associated Docker container for this module can be found in https://git.ni.dfki.de/cleluschko/DEEP-OC-litter_assessment_service.
+The associated Docker container for this module can be found in https://github.com/DFKI-NI/DEEP-OC-litter_assessment_service.
 
 ## Project structure
 ```
