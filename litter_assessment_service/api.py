@@ -27,6 +27,7 @@ import os
 import logging
 import io
 import subprocess
+import shutil
 from zipfile import ZipFile
 from pathlib import Path
 from PIL import Image
@@ -131,13 +132,18 @@ def get_arr_from_bin(image_file):
     image_or= Image.open(io.BytesIO(image_file))
     return np.array(image_or).astype(np.uint8)
 
-def save_plot(**kwargs):
+def save_plot_nextcloud(**kwargs):
     """
     Plot classification results and upload the resulting .jpg file to mounted external storage
     """
     fig = ResultPlot(kwargs['results'], kwargs['type']).get_plot()
     fig.savefig(f'{kwargs["output_path"]}_{kwargs["type"]}.jpg')
     mount_nextcloud(f'{kwargs["output_path"]}_{kwargs["type"]}.jpg', f'{kwargs["to_path"]}')
+
+def return_plot(**kwargs):
+    fig = ResultPlot(kwargs['results'], kwargs['type']).get_plot()
+    fig.savefig(f'{kwargs["output_path"]}_{kwargs["type"]}.jpg')
+
 
 @_catch_error
 def predict(**kwargs):
@@ -149,18 +155,52 @@ def predict(**kwargs):
     image_names, image_files = get_input_data(data)
     to_path='rshare:iMagine_UC1/results'
 
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        for name, file in zip(image_names, image_files):
-            output_path=os.path.join(tmp_dir, name[:-4])
-            if data.content_type=='application/octet-stream':
-                image=get_arr_from_bin(file)
-            else:
-                image_or = Image.open(file)
-                image = np.array(image_or)
-            results_PLD = classification.PLD_result(image, image_names, model_PLD)
-            if kwargs["PLD_plot"]:
-                save_plot(results=results_PLD, type='PLD', output_path=output_path,to_path=to_path)
+    tmp_dir = tempfile.mkdtemp()
 
-            if kwargs["PLQ_plot"]:
-                results_PLQ = classification.PLQ_result(results_PLD.c_matrix, image, image_names, model_PLQ)
-                save_plot(results=results_PLQ, type='PLQ', output_path=output_path,to_path=to_path)
+    #with tempfile.TemporaryDirectory() as tmp_dir:
+    for name, file in zip(image_names, image_files):
+        output_path=os.path.join(tmp_dir, name[:-4])
+        if data.content_type=='application/octet-stream':
+            image=get_arr_from_bin(file)
+        else:
+            image_or = Image.open(file)
+            image = np.array(image_or)
+        results_PLD = classification.PLD_result(image, image_names, model_PLD)
+
+        if kwargs["PLD_plot"] and kwargs["PLQ_plot"]:
+            return_plot(results=results_PLD, type='PLD', output_path=output_path)
+            results_PLQ = classification.PLQ_result(results_PLD.c_matrix, image, image_names, model_PLQ)
+            return_plot(results=results_PLQ, type='PLQ',output_path=output_path)
+            if kwargs["output_type"]=='Download':
+                shutil.make_archive(tmp_dir, format = 'zip', root_dir = tmp_dir)
+                zip_path = tmp_dir + '.zip'
+                return open(zip_path, 'rb')
+            
+            elif kwargs["output_type"]=='nextcloud':
+                save_plot_nextcloud(results=results_PLD, type='PLD', output_path=output_path,to_path=to_path)
+                save_plot_nextcloud(results=results_PLQ, type='PLQ', output_path=output_path,to_path=to_path)
+            else:
+                print(f'no output type selected')
+
+        elif kwargs["PLD_plot"]:
+            print(f'starting PLD again')
+            return_plot(results=results_PLD, type='PLD', output_path=output_path)
+            plot_path=f'{output_path}_PLD.jpg'
+            if kwargs["output_type"]=='Download':
+                return open(plot_path, 'rb')
+            elif kwargs["output_type"]=='nextcloud':
+                save_plot_nextcloud(results=results_PLD, type='PLD', output_path=output_path,to_path=to_path)
+            else:
+                print(f'no output type selected')
+
+        elif kwargs["PLQ_plot"]:
+            print(f'starting PLQ again')
+            results_PLQ = classification.PLQ_result(results_PLD.c_matrix, image, image_names, model_PLQ)
+            return_plot(results=results_PLQ, type='PLQ',output_path=output_path)
+            plot_path=f'{output_path}_PLQ.jpg'
+            if kwargs["output_type"]=='Download':
+                return open(plot_path, 'rb')
+            elif kwargs["output_type"]=='nextcloud':
+                save_plot_nextcloud(results=results_PLQ, type='PLQ', output_path=output_path,to_path=to_path)
+            else:
+                print(f'no output type selected')

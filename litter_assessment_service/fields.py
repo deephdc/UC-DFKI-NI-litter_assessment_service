@@ -20,11 +20,16 @@ class PredictArgsSchema(Schema):
         required = False,
         load_default=True,
         metadata={"enum": [True, False]})
-
+    
     accept = fields.Str(
         location="headers",
-        validate=validate.OneOf(['zip']),
-        description='Returns zip file with results')
+        validate=validate.OneOf(['image/png', 'zip']),
+        description='Choose zip if you want PLD and PLQ')
+    
+    output_type = fields.Str(
+        load_default='Download',
+        metadata={"enum": ['Download', 'Nextcloud']},
+        description='Choose the way the output should be provided')
 
 if __name__=='__main__':
     args=PredictArgsSchema()
