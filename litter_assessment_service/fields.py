@@ -14,11 +14,13 @@ class PredictArgsSchema(Schema):
     PLD_plot = fields.Bool(
         required = False,
         load_default=True,
+        description='Whether a detection plot should be provided.',
         metadata={"enum": [True, False]})
 
     PLQ_plot = fields.Bool(
         required = False,
         load_default=True,
+        description='Whether a quantification plot should be provided.',
         metadata={"enum": [True, False]})
     
     accept = fields.Str(
