@@ -87,6 +87,9 @@ def get_predict_args():
 
     return predict_args
 
+def get_train_args(**kwargs):
+    return {}
+
 def get_input_data(data):
     """
     Check content type of uploaded data and return list 
