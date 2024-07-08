@@ -154,7 +154,7 @@ def predict(**kwargs):
     Run inference on uploaded image(s) and run "save_plot(**kwargs)" 
     for the resulting classifications
     """
-    data = kwargs["input"]
+    data = kwargs["files"]
     image_names, image_files = get_input_data(data)
     to_path='rshare:iMagine_UC1/results'
 
