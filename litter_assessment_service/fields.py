@@ -5,7 +5,7 @@ class PredictArgsSchema(Schema):
     class Meta:
         ordered = True
 
-    input= fields.Field(
+    files= fields.Field(
         required=True,
         type="file",
         location="form",
